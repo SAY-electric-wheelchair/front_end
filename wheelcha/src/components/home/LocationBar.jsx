@@ -27,7 +27,7 @@ const BtnWrapper = styled.div`
     width: 450px;
     border-left: 1px solid #e5e5e5;
     border-right: 1px solid #e5e5e5;
-    padding: 0 10px;
+    padding: 0 0px;
 
   };
 

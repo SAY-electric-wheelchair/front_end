@@ -24,7 +24,7 @@ const BtnWrapper = styled.div`
   height: 80px;
 
   @media screen and (min-width: 850px) {
-    width: 450px;
+    width: 380px;
     border-left: 1px solid #e5e5e5;
     border-right: 1px solid #e5e5e5;
     padding: 0 0px;

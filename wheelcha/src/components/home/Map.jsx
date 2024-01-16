@@ -62,10 +62,11 @@ const Map = () => {
         //마커 클릭시 뜰 정보창 ( html 형식으로 작성 )
         let infoWindow = new naver.maps.InfoWindow({
             content: '<div>'+
-                '<a href="https://github.com/lims00" style="display:flex; text-decoration: none; color: black" >'+
+                '<a href="/detail/0001" style="display:flex; text-decoration: none; color: black" >'+
                 '<img style="width:120px;margin:10px;" src="../locationInfoImg.png">' +
                 '<div style="display:flex;flex-direction: column">'+
-                '<div style="width:200px;text-align:left;padding-top:10px;font-weight:bold;font-size:20px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">여기에para가 들어올거에요</div>'+
+                '<div style="width:200px;text-align:left;padding-top:10px;font-weight:bold;font-size:20px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">구로구청전동휠체어급속\n' +
+                '충전기</div>'+
                 '<div style="width:200px;text-align:left;padding-top:10px;padding-right:5px;font-size:15px;">서울특별시 강남구 테헤란로 427</div>'+
                 '<div style="font-size:15px;padding-top:10px;color:#10a64e;font-weight:bold;">사용 가능</div>'+
                 '</div>' +

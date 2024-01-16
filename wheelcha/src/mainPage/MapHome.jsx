@@ -3,7 +3,6 @@ import Map from "../components/home/Map";
 import styled from 'styled-components';
 import LogoImg from "../img/logo.png";
 import LocationBar from "../components/home/LocationBar";
-import FindOptionBTN from "../components/home/FindOptionBTN";
 
 const HallWrapper = styled.div`
   display: block;
@@ -26,7 +25,7 @@ const Wrapper = styled.div`
   height: 100vh;
   
   @media screen and (min-width: 850px) {
-    width: 450px;
+    width: 380px;
     border-left: 1px solid #e5e5e5;
     border-right: 1px solid #e5e5e5;
 
@@ -46,7 +45,6 @@ const LogoImgWrapper = styled.img`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 15px;
   height: 40px;
   width: 150px;
   z-index: 1;

@@ -93,7 +93,7 @@ const PlaceDetail = ({placeID}) => {
     return (
         <HallWrapper>
             <Wrapper>
-                <PlaceInfoBox content={"상세페이지"}/>
+                <PlaceInfoBox back={'/'} content={"상세페이지"}/>
                 <BtnGroup>
                     <SendMsgBtn to='/sendAddress/0001'>문자 보내기</SendMsgBtn>
                     <RepairReportBtn to='/reportRepair/0001'>고장 신고</RepairReportBtn>

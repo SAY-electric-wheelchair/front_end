@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import {Link} from "react-router-dom";
 
 
 const Wrapper = styled.div`
@@ -36,7 +37,7 @@ const BtnWrapper = styled.div`
 const BackMyLocationBtn = styled.button`
   border: 0 solid #e5e5e5;
   border-radius: 10px;
-  width: 45%;
+  width: 160px;
   height: 60px;
   font-weight: bold;
   font-size: 25px;
@@ -53,7 +54,7 @@ const SearchLocationBtn = styled.button`
   border: 2px solid #4ECB71;
   border-radius: 10px;
   font-weight: bold;
-  width: 45%;
+  width: 160px;
   height: 60px;
   font-size: 25px;
   background-color: transparent;
@@ -69,7 +70,7 @@ const LocationBar = () => {
         <Wrapper>
             <BtnWrapper>
                 <BackMyLocationBtn>현재 위치로</BackMyLocationBtn>
-                <SearchLocationBtn>위치 검색</SearchLocationBtn>
+                <Link to={'/searchLocation'}><SearchLocationBtn>위치 검색</SearchLocationBtn></Link>
             </BtnWrapper>
         </Wrapper>
     )

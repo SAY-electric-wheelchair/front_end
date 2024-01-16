@@ -1,1 +1,6 @@
-# front_end
+# Framwork
+- React.js
+# init
+`npm install`
+# start
+`npm start`

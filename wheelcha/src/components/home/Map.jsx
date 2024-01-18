@@ -61,7 +61,7 @@ const Map = () => {
 
         //마커 클릭시 뜰 정보창 ( html 형식으로 작성 )
         let infoWindow = new naver.maps.InfoWindow({
-            content: '<div>'+
+            content: '<div style="height:190px; ">'+
                 '<a href="/detail/0001" style="display:flex; text-decoration: none; color: black" >'+
                 '<img style="width:120px;margin:10px;" src="../locationInfoImg.png">' +
                 '<div style="display:flex;flex-direction: column">'+
@@ -132,6 +132,7 @@ const Map = () => {
 
 
     }, []);
+
 
     return (
         <>

@@ -16,19 +16,23 @@ const BoxWrapper= styled.div`
 
 const OptionTag=({option})=>{
     let color;
-    if (option==="충전소"){
+    let tagName;
+    if (option==="CHARGE"){
         color="#4ECB71";
+        tagName="충전소";
     }
-    else if (option==="수리소"){
+    else if (option==="REPAIR"){
         color="#4B89DC";
+        tagName="수리소";
     }
     else if(option==="공기주입기"){
         color="#E67373";
+        tagName="공기주입기";
 
     }
     return(
         <BoxWrapper style={{backgroundColor:color}}>
-           {option}
+           {tagName}
         </BoxWrapper>
     )
 }

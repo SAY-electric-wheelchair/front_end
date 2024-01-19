@@ -17,8 +17,10 @@ const PlaceName = styled.div`
 display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: center;
   font-size: 25px;
   margin: 10px;
+  min-height: 50px;
   width: 80%;
   text-align: center;
   font-weight: bold;
@@ -31,16 +33,16 @@ display: flex;
 `
 
 
-const PlaceInfoBox = ({ placeID,content,back }) => {
+const PlaceInfoBox = ({ placeName,content,back,optionTag,repairTag }) => {
 
     //placeID로 place 정보를 가져온다.
 
     return (
        <Wrapper>
                 <PageHeader back={back} title={content}></PageHeader>
-                <PlaceName>구로구 청전동 휠체어 급속 충전기</PlaceName>
+                <PlaceName>{placeName}</PlaceName>
                 <OptionWrapper>
-                    <OptionTag option={"충전소"}></OptionTag>
+                    <OptionTag option={optionTag}></OptionTag>
                     <RepairTag option={true}></RepairTag>
                 </OptionWrapper>
        </Wrapper>

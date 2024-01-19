@@ -1,6 +1,8 @@
 import PageHeader from "../components/PageHeader";
 import styled from "styled-components";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
+import axios from "axios";
 
 const HallWrapper = styled.div`
   display: block;
@@ -87,33 +89,46 @@ const PhoneInput = styled.input`
 const SendBtn = styled.button`
   width: 90%;
   height: 45px;
-  border:0px;
+  border: 0px;
   border-radius: 10px;
   font-size: 20px;
   background-color: #4ECB71;
   color: white;
   font-weight: bold;
-  margin-top:20px;
-    `
+  margin-top: 20px;
+`
 const SendAddress = () => {
+    const params = useParams();
+    const placeIdx = params.placeId;
+    const [placeInfo, setPlaceInfo] = useState({});
+    useEffect(() => {
+        axios.get(`http://localhost:8080/api/places/${placeIdx}`
+        ).then(
+            (response) => {
+                setPlaceInfo(response.data.result);
+            }
+        ).catch((e)=>{
+            console.log(e);
+        });
+    },[]);
     const [phoneNumber, setPhoneNumber] = useState('');
     const phoneHandler = (e) => {
         setPhoneNumber(e.currentTarget.value);
     }
-    const sendHandler= () => {
+    const sendHandler = () => {
         alert('문자가 전송되었습니다.');
     }
 
     return (
         <HallWrapper>
             <Wrapper>
-                <PageHeader back={'/detail/0001'} title={"문자 보내기"}></PageHeader>
+                <PageHeader back={`/detail/${placeIdx}`} title={"문자 보내기"}></PageHeader>
 
                 <Tittle>입력하신 전화번호로<br/>장소 정보를 보내드립니다.</Tittle>
                 <AddressBox>
-                    <PlaceName>구로구 청전동 휠체어 급속 충전기</PlaceName>
+                    <PlaceName>{placeInfo['placeName']}</PlaceName>
                     <SubjectTittle>주소</SubjectTittle>
-                    <AddressDetail> 구로구 청룡동112-1</AddressDetail>
+                    <AddressDetail>{placeInfo['address']}</AddressDetail>
                     <SubjectTittle>네이버 길찾기</SubjectTittle>
                     <NaverURL href={'https://naver.me/FawROTpY'}>바로가기</NaverURL>
                 </AddressBox>

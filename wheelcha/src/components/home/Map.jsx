@@ -1,15 +1,36 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import styled from 'styled-components';
 import UserLocationMaker from "../../icon/userLocation.png";
 import ChargeLocationMaker from "../../icon/chargeLocation.png";
+import RepairLocationMaker from "../../icon/repairLocation.png";
 import FindOptionBTN from "./FindOptionBTN";
+import axios from "axios";
 
 
 const Map = () => {
     const mapElement = useRef(null);
     const {naver} = window;
+    const [placeList, setPlaceList] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/places/list', {
+                    params: {
+                        placeName: null,
+                        placeCategoryList: null
+                    }
+                });
+                console.log(response.data.result);
+                setPlaceList(response.data.result);
+            } catch (e) {
+                console.log(e);
+            }
+        };
+        fetchData();
+    }, []);
 
     useEffect(() => {
+
         if (!mapElement.current || !naver) return;
 
         // 지도에 표시할 위치의 위도와 경도 좌표를 파라미터로 넣어줍니다.
@@ -29,9 +50,9 @@ const Map = () => {
         const map = new naver.maps.Map(mapElement.current, mapOptions);
 
 
-        let UserMarkerOptions={
+        let UserMarkerOptions = {
             position: Userlocation,
-            map:map,
+            map: map,
             icon: {
                 url: `${UserLocationMaker}`,
                 size: new naver.maps.Size(50, 54),
@@ -40,50 +61,96 @@ const Map = () => {
             }
         }
         new naver.maps.Marker(UserMarkerOptions);
+
+        //주소로 경도 바꾸는거
+        // function searchAddressToCoordinate(address) {
+        //     naver.maps.Service.geocode({
+        //         query: address
+        //     }, function (status, response) {
+        //         if (status === naver.maps.Service.Status.ERROR) {
+        //             return alert('Something Wrong!');
+        //         }
+        //
+        //         if (response.v2.meta.totalCount === 0) {
+        //             return alert('totalCount' + response.v2.meta.totalCount);
+        //         }
+        //
+        //         let item = response.v2.addresses[0],
+        //             pointX = item.x,
+        //             pointY = item.y;
+        //         console.log(pointX, pointY);
+        //     });
+        // }
+
+
         //마커랑 윈도우 정보 담는 것
-        var markers = [],
-            infoWindows = [];
-        //여기부터 마커를 for문으로 돌려서 표시해야함 ( 백 연결시에 )
+        var markers = [], infoWindows = [];
 
-        const ChargeLocation = new naver.maps.LatLng(37.5657, 126.976);
-        let ChargeMarkerOptions={
-            position: ChargeLocation,
-            map:map,
-            icon: {
-                url: `${ChargeLocationMaker}`,
-                size: new naver.maps.Size(50, 54),
-                origin: new naver.maps.Point(0, 0),
-                anchor: new naver.maps.Point(25, 25),
+
+        //searchAddressToCoordinate("서울시 양원역로92");
+        //37.5657, 126.976
+        console.log(placeList.length);
+        for (let i = 0; i < placeList.length; i++) {
+            var latLngList = placeList[i]['coordinate'].split(',')
+            let MarkerOptions;
+            const Location = new naver.maps.LatLng(latLngList[0], latLngList[1]);
+            if (placeList[i]['placeCategory'] === 'REPAIR') {
+                MarkerOptions = {
+                    position: Location,
+                    map: map,
+                    icon: {
+                        url: `${RepairLocationMaker}`,
+                        size: new naver.maps.Size(50, 54),
+                        origin: new naver.maps.Point(0, 0),
+                        anchor: new naver.maps.Point(25, 25),
+                    }
+                }
+            } else if (placeList[i]['placeCategory'] === 'CHARGE') {
+                MarkerOptions = {
+                    position: Location,
+                    map: map,
+                    icon: {
+                        url: `${ChargeLocationMaker}`,
+                        size: new naver.maps.Size(50, 54),
+                        origin: new naver.maps.Point(0, 0),
+                        anchor: new naver.maps.Point(25, 25),
+                    }
+                }
             }
+            var chargeMarker = new naver.maps.Marker(MarkerOptions);
+            //장소 정보 띄우는 창
+            let repairFlag=true;
+            let repairHTML;
+            if (repairFlag==true){
+                repairHTML='<div style="font-size:15px;padding-top:10px;color:#10a64e;font-weight:bold;">사용 가능</div>'
+            }else{
+                repairHTML='<div style="font-size:15px;padding-top:10px;color:#ff0000;font-weight:bold;">사용 불가능</div>'
+            }
+            //마커 클릭시 뜰 정보창 ( html 형식으로 작성 )
+            let infoWindow = new naver.maps.InfoWindow({
+                content: '<div style="height:190px; ">' +
+                    '<a href="/detail/'+placeList[i]["placeIdx"]+'" style="display:flex; text-decoration: none; color: black" >' +
+                    '<img style="width:120px;margin:10px;" src="../locationInfoImg.png">' +
+                    '<div style="display:flex;flex-direction: column">' +
+                    '<div id="placename" style="width:200px;text-align:left;padding-top:10px;font-weight:bold;font-size:20px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">'+placeList[i]["placeName"]+'</div>' +
+                    '<div style="width:200px;text-align:left;padding-top:10px;padding-right:5px;font-size:15px;">'+placeList[i]["addressDetail"]+'</div>' +
+                    repairHTML+
+                    '</div>' +
+                    '</a>' +
+                    '<div style="display:flex;flex-direction:row;justify-content:center;">' +
+                    '<a style="font:black;width:150px;text-align:center;font-size:20px;padding:5px;font-weight:bold;border:2px solid #4ECB71;border-radius: 10px;margin-left:10px;margin-right:10px; margin-bottom:5px; background:none;" href="/sendAddress/'+placeList[i]["placeIdx"]+'">문자보내기</a>' +
+                    '<button style="width:150px;text-align:center;font-size:20px;padding:5px;font-weight:bold;border:2px solid #4ECB71;border-radius: 10px;margin-left:10px;margin-right:10px; margin-bottom:5px; background:none;" onClick="">주소 복사</button>' +
+                    '</div>' +
+                    '</div> '
+            });
+            markers.push(chargeMarker)
+            infoWindows.push(infoWindow);
         }
-        var chargeMarker = new naver.maps.Marker(ChargeMarkerOptions);
-        //장소 정보 띄우는 창
-
-        //마커 클릭시 뜰 정보창 ( html 형식으로 작성 )
-        let infoWindow = new naver.maps.InfoWindow({
-            content: '<div style="height:190px; ">'+
-                '<a href="/detail/0001" style="display:flex; text-decoration: none; color: black" >'+
-                '<img style="width:120px;margin:10px;" src="../locationInfoImg.png">' +
-                '<div style="display:flex;flex-direction: column">'+
-                '<div style="width:200px;text-align:left;padding-top:10px;font-weight:bold;font-size:20px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">구로구청전동휠체어급속\n' +
-                '충전기</div>'+
-                '<div style="width:200px;text-align:left;padding-top:10px;padding-right:5px;font-size:15px;">서울특별시 강남구 테헤란로 427</div>'+
-                '<div style="font-size:15px;padding-top:10px;color:#10a64e;font-weight:bold;">사용 가능</div>'+
-                '</div>' +
-                '</a>' +
-                '<div style="display:flex;flex-direction:row;justify-content:center;">'+
-                '<button style="width:150px;text-align:center;font-size:20px;padding:5px;font-weight:bold;border:2px solid #4ECB71;border-radius: 10px;margin-left:10px;margin-right:10px; margin-bottom:5px; background:none;" onClick="">문자보내기</button>'+
-                '<button style="width:150px;text-align:center;font-size:20px;padding:5px;font-weight:bold;border:2px solid #4ECB71;border-radius: 10px;margin-left:10px;margin-right:10px; margin-bottom:5px; background:none;" onClick="">주소 복사</button>'+
-                '</div>' +
-                '</div> '
-        });
-        markers.push(chargeMarker)
-        infoWindows.push(infoWindow);
-
         //마커 클릭시 정보창 띄우고지우는 함수들
-        naver.maps.Event.addListener(map, 'idle', function() {
+        naver.maps.Event.addListener(map, 'idle', function () {
             updateMarkers(map, markers);
         });
+
         function updateMarkers(map, markers) {
 
             var mapBounds = map.getBounds();
@@ -101,6 +168,7 @@ const Map = () => {
                 }
             }
         }
+
         function showMarker(map, marker) {
 
             if (marker.setMap()) return;
@@ -112,8 +180,9 @@ const Map = () => {
             if (!marker.setMap()) return;
             marker.setMap(null);
         }
+
         function getClickHandler(seq) {
-            return function(e) {
+            return function (e) {
                 var marker = markers[seq],
                     infoWindow = infoWindows[seq];
 
@@ -125,19 +194,19 @@ const Map = () => {
             }
         }
 
-        for (var i=0, ii=markers.length; i<ii; i++) {
+        for (var i = 0, ii = markers.length; i < ii; i++) {
             naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i));
         }
         //여기까지 infowindow 창 띄우는 함수들
 
 
-    }, []);
+    }, [placeList]);
 
 
     return (
         <>
-            <div ref={mapElement} style={{bottom:'113px',top:'0px', height: '100%',width:'100%',zIndex:0}}>
-            <FindOptionBTN/>
+            <div ref={mapElement} style={{bottom: '113px', top: '0px', height: '100%', width: '100%', zIndex: 0}}>
+                <FindOptionBTN/>
             </div>
         </>
     );

@@ -1,8 +1,10 @@
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import PlaceInfoBox from "../components/placeDetail/PlaceInfoBox";
 import styled from "styled-components";
 import {TiDelete} from "react-icons/ti";
 import {CiCamera} from "react-icons/ci";
+import {useParams} from "react-router-dom";
+import axios from "axios";
 
 const HallWrapper = styled.div`
   display: block;
@@ -94,8 +96,8 @@ const InputBox = styled.textarea`
 
 const RegisterBtn = styled.button`
   width: 90%;
-    height: 45px;
-  border:0px;
+  height: 45px;
+  border: 0px;
   border-radius: 10px;
   font-size: 20px;
   background-color: #FF4500;
@@ -106,8 +108,20 @@ const RepairReport = () => {
     const [imgArray, setImgArray] = useState([]); // 이미지 배열
     const photoInput = useRef();
     const [reportText, setReportText] = useState('') // 신고 내용
-
-
+    const [placeInfo, setPlaceInfo] = useState({}) // 장소 정보
+    const params = useParams();
+    const placeIdx = params.placeId;
+    useEffect(() => {
+            axios.get(`http://localhost:8080/api/places/${placeIdx}`
+            ).then((response) => {
+                    setPlaceInfo(response.data.result);
+                    console.log(response.data.result);
+                }
+            ).catch((e) => {
+                console.log(e);
+            });
+        },[]
+    )
     const handleAddImageFile = (e) => {
         e.preventDefault()
         let reader = new FileReader();
@@ -138,17 +152,18 @@ const RepairReport = () => {
     return (
         <HallWrapper>
             <Wrapper>
-                <PlaceInfoBox back="/detail/0001" content={"고장 신고"}/>
+                <PlaceInfoBox placeName={placeInfo['placeName']} optionTag={placeInfo['placeCategory']}
+                              back={`/detail/${placeIdx}`} content={"고장 신고"}/>
                 <TittleWrapper>
                     <Tittle>사진 첨부 (최대 3장)</Tittle>
                 </TittleWrapper>
 
                 <input type="file" accept='image/*' ref={photoInput} onChange={handleAddImageFile}
                        style={{display: 'none'}}/>
-                {imgArray.length >= 3 ? <div style={{margin:'5px'}}></div>:
-                <AddPhotoBtn onClick={() => handleAddPhotoClick()}><CiCamera size={30} color={'#4ECB71'}
-                                                                             style={{padding: '5px'}}/>사진을 추가해
-                    주세요</AddPhotoBtn>}
+                {imgArray.length >= 3 ? <div style={{margin: '5px'}}></div> :
+                    <AddPhotoBtn onClick={() => handleAddPhotoClick()}><CiCamera size={30} color={'#4ECB71'}
+                                                                                 style={{padding: '5px'}}/>사진을 추가해
+                        주세요</AddPhotoBtn>}
 
                 <ImgWrapper>
                     <div style={{

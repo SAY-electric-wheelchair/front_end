@@ -3,7 +3,9 @@ import PlaceInfoBox from "../components/placeDetail/PlaceInfoBox";
 import DetailAddressBox from "../components/placeDetail/DetailAddressBox";
 import AdIMG from "../img/advertise.png";
 import AroundPhoto from "../components/placeDetail/AroundPhoto";
-import {Link} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
+import axios from "axios";
+import {useEffect, useState} from "react";
 
 const HallWrapper = styled.div`
   display: block;
@@ -45,7 +47,7 @@ const BtnGroup = styled.div`
   };
 
 
-  
+
 `
 const SendMsgBtn = styled(Link)`
 
@@ -58,10 +60,10 @@ const SendMsgBtn = styled(Link)`
   padding: 8px 15px;
   font-size: 20px;
   font-weight: bold;
-  margin:20px 5px;
+  margin: 20px 5px;
   color: black;
   text-decoration: none;
-  
+
 `
 const RepairReportBtn = styled(Link)`
 
@@ -75,30 +77,46 @@ const RepairReportBtn = styled(Link)`
   padding: 8px 20px;
   font-size: 20px;
   font-weight: bold;
-  margin:20px 5px;
+  margin: 20px 5px;
   color: black;
   text-decoration: none;
 `
 const AdWrapper = styled.img`
-width: 100%;
+  width: 100%;
   height: 120px;
 `
 
 
+const PlaceDetail = () => {
+    const [placeInfo, setPlaceInfo] = useState({});
+    const params = useParams();
+    const placeIdx = params.placeId;
+    useEffect(() => {
 
-const PlaceDetail = ({placeID}) => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/places/${placeIdx}`);
+                console.log(response);
+                setPlaceInfo(response.data.result);
+            } catch (e) {
+                console.log(e);
+            }
+        };
+        fetchData();
 
-    //placeID로 place 정보를 가져온다.
+    }, []);
+
 
     return (
         <HallWrapper>
             <Wrapper>
-                <PlaceInfoBox back={'/'} content={"상세페이지"}/>
+                <PlaceInfoBox placeName={placeInfo["placeName"]} optionTag={placeInfo['placeCategory']} back={'/'}
+                              content={"상세페이지"}/>
                 <BtnGroup>
-                    <SendMsgBtn to='/sendAddress/0001'>문자 보내기</SendMsgBtn>
-                    <RepairReportBtn to='/reportRepair/0001'>고장 신고</RepairReportBtn>
+                    <SendMsgBtn to={`/sendAddress/${placeIdx}`}>문자 보내기</SendMsgBtn>
+                    <RepairReportBtn to={`/reportRepair/${placeIdx}`}>고장 신고</RepairReportBtn>
                 </BtnGroup>
-                <DetailAddressBox placeName={"서울 구로구 가마산로 245"} address={"2호선 7호선 대림역 4번 출구에서 우회전 후 896m 떨어진 지점에 위치"} phone={"없음"} />
+                <DetailAddressBox placeName={placeInfo["address"]} address={placeInfo["addressDetail"]} phone={"없음"}/>
                 <AdWrapper src={AdIMG}></AdWrapper>
                 <AroundPhoto imgs={''}/>
             </Wrapper>

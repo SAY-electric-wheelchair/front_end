@@ -59,6 +59,7 @@ const SearchLocationBtn = styled.button`
   font-size: 25px;
   background-color: transparent;
   padding: 10px 0;
+  color:black;
   @media screen and (max-width: 484px) {
     font-size: 22px;
     padding: 5px 0;

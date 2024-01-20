@@ -5,7 +5,39 @@ import ChargeLocationMaker from "../../icon/chargeLocation.png";
 import RepairLocationMaker from "../../icon/repairLocation.png";
 import FindOptionBTN from "./FindOptionBTN";
 import axios from "axios";
+import FindBtn from "./FindBtn";
+const Wrapper=styled.div`
 
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  z-index:1;
+  background-color: transparent;
+  margin-top:10px;
+`
+const OptionBtn = styled.button`
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  letter-spacing: 2px;
+  font-weight: bold;
+  color: white;
+  border: 0px;
+  margin: 5px;
+  @media screen and (min-width: 850px) {
+    padding: 3px 20px;
+    font-size: 18px;
+  };
+  @media screen and (max-width: 850px) {
+    padding: 5px 15px;
+    font-size: 20px;
+  }
+`
 
 const Map = () => {
     const mapElement = useRef(null);
@@ -13,20 +45,22 @@ const Map = () => {
     const [placeList, setPlaceList] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/api/places/list', {
+            await axios.get('http://localhost:8080/api/places/list', {
                     params: {
                         placeName: null,
                         placeCategoryList: null
                     }
-                });
+                }).then((response) => {
                 console.log(response.data.result);
                 setPlaceList(response.data.result);
-            } catch (e) {
+            } ).catch ((e) =>{
                 console.log(e);
-            }
+            })
         };
-        fetchData();
+        if (placeList.length===0) {
+            fetchData();
+        }
+
     }, []);
 
     useEffect(() => {
@@ -198,15 +232,25 @@ const Map = () => {
             naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i));
         }
         //여기까지 infowindow 창 띄우는 함수들
-
+        const handleChargeSetting = () => {
+            console.log('충전소');
+        }
 
     }, [placeList]);
+    const handleChargeSetting = () => {
+        console.log('충전소');
+    }
+
 
 
     return (
         <>
             <div ref={mapElement} style={{bottom: '113px', top: '0px', height: '100%', width: '100%', zIndex: 0}}>
-                <FindOptionBTN/>
+                <Wrapper>
+                    <OptionBtn  style={{backgroundColor:'#4ECB71'}} onClick={handleChargeSetting}>충전소</OptionBtn>
+                    <OptionBtn  style={{backgroundColor:'#4B89DC'}}>수리소</OptionBtn>
+                    <OptionBtn style={{backgroundColor:'#E67373'}}>공기 주입기</OptionBtn>
+                </Wrapper>
             </div>
         </>
     );

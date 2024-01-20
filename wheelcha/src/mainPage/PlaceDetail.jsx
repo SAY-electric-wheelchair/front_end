@@ -116,7 +116,7 @@ const PlaceDetail = () => {
                     <SendMsgBtn to={`/sendAddress/${placeIdx}`}>문자 보내기</SendMsgBtn>
                     <RepairReportBtn to={`/reportRepair/${placeIdx}`}>고장 신고</RepairReportBtn>
                 </BtnGroup>
-                <DetailAddressBox placeName={placeInfo["address"]} address={placeInfo["addressDetail"]} phone={"없음"}/>
+                <DetailAddressBox placeName={placeInfo["address"]} address={placeInfo["addressDetail"]} phone={placeInfo["placePhone"]}/>
                 <AdWrapper src={AdIMG}></AdWrapper>
                 <AroundPhoto imgs={''}/>
             </Wrapper>

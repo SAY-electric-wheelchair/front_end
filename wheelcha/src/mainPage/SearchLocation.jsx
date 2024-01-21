@@ -11,7 +11,6 @@ const HallWrapper = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
   };
 `
 const Wrapper = styled.div`

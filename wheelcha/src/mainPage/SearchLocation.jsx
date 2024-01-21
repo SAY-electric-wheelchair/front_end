@@ -1,6 +1,7 @@
 import PageHeader from "../components/PageHeader";
 import styled from "styled-components";
 import {FaKeyboard, FaMicrophone} from "react-icons/fa";
+import {Link} from "react-router-dom";
 
 const HallWrapper = styled.div`
   display: block;
@@ -10,7 +11,6 @@ const HallWrapper = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
   };
 `
 const Wrapper = styled.div`
@@ -29,12 +29,10 @@ const Wrapper = styled.div`
   };`
 const BtnWrapper=styled.div`
   display: flex;
-flex-direction: column;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  margin-top: 100px;
-  
+  margin-top: 100px;  
 `
 const SearchBtn=styled.div`
   display: flex;
@@ -45,10 +43,10 @@ const SearchBtn=styled.div`
   border: 2px solid #4ECB71;
   background-color: transparent;
   font-size: 20px;
-  width: 85%;
+  width: 85vw;
   border-radius: 10px;
   padding: 10px;
-  height: 80px;
+  height: 120px;
 `
 
 const SearchLocation=()=>{
@@ -58,8 +56,9 @@ const SearchLocation=()=>{
             <Wrapper>
             <PageHeader back={'/'} title={"위치 검색"}></PageHeader>
                 <BtnWrapper>
-                <SearchBtn  style={{background:'#4ECB71',color:'white', marginBottom:'25px'}}><FaKeyboard size={30} style={{paddingRight:'10px'}}/>직접 검색</SearchBtn>
-                <SearchBtn ><FaMicrophone size={30} style={{paddingRight:'10px'}}/>음성 검색</SearchBtn></BtnWrapper>
+                  <Link to={'/searchTyping'}><SearchBtn style={{background:'#4ECB71',color:'white', marginBottom:'25px'}}><FaKeyboard size={30} style={{paddingRight:'10px'}}/>직접 검색</SearchBtn></Link>
+                  <Link to={'/searchVoice'}><SearchBtn><FaMicrophone size={30} style={{paddingRight:'10px'}}/>음성 검색</SearchBtn></Link>
+                </BtnWrapper>
             </Wrapper>
         </HallWrapper>
     )

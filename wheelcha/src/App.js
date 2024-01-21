@@ -5,6 +5,9 @@ import PlaceDetail from "./mainPage/PlaceDetail";
 import RepairReport from "./mainPage/RepairReport";
 import SendAddress from "./mainPage/SendAddress";
 import SearchLocation from "./mainPage/SearchLocation";
+import SearchTyping from "./mainPage/SearchTyping";
+import SearchVoice from "./mainPage/SearchVoice";
+
 function App() {
   return (
     <Routes>
@@ -13,6 +16,8 @@ function App() {
         <Route path="/reportRepair/:placeId" element={ <RepairReport/> } />
         <Route path="/sendAddress/:placeId" element={ <SendAddress/> } />
         <Route path="/searchLocation" element={ <SearchLocation/> } />
+        <Route path="/searchTyping" element={ <SearchTyping/> } />
+        <Route path="/searchVoice" element={ <SearchVoice/> } />
     </Routes>
   );
 }
